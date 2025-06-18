@@ -147,8 +147,3 @@ workflow {
     .collectFile(name: "${params.outDir}/ORF_primers.csv")
 
 }
-
-// nextflow run main.nf -bg -process.echo --species Mus_musculus \
-//  --outDir /ds-workspace/EW-TempDataStore/ORF/Mus_musculus \
-// --features /ds-workspace/EW-TempDataStore/Retrogenix_data/protein_screens/CrossSpeciesORF.csv > /dev/tty 2>&1
-

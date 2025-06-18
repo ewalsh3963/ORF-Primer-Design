@@ -165,10 +165,3 @@ def main(command=None):
 
 if __name__ == "__main__":
     main()
-
-
-
-
-# python3 /home/ewalsh/PrimerDesign/primerDesign.py \
-# -fa /ds-workspace/EW-TempDataStore/ORF/Mus_musculus/ORF_PrimaryDesign.fa \
-# -bed /ds-workspace/EW-TempDataStore/ORF/Mus_musculus/features.bed

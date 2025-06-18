@@ -281,25 +281,5 @@ if __name__ == "__main__":
 
 
 
-# nohup python3 /home/ewalsh/PrimerDesign/ExonScan.py \
-# -gtf /ds-workspace/EW-TempDataStore/ORF/Macaca_fascicularis/Macaca_fascicularis.Macaca_fascicularis_6.0.113.gtf.gz \
-# -fa /ds-workspace/EW-TempDataStore/ORF/Macaca_fascicularis/Macaca_fascicularis.dna.primary_assembly.fa \
-# -o /ds-workspace/EW-TempDataStore/ORF/Macaca_fascicularis/ORF_primers.csv \
-# -s Macaca_fascicularis &
-
-# python3 /home/ewalsh/PrimerDesign/ExonScan.py \
-# -gtf /ds-workspace/EW-TempDataStore/ORF/Mus_musculus/Mus_musculus.GRCm39.113.gtf.gz \
-# -fa /ds-workspace/EW-TempDataStore/ORF/Mus_musculus/Mus_musculus.GRCm39.dna.primary_assembly.fa \
-# -o /ds-workspace/EW-TempDataStore/ORF/Mus_musculus/ORF_primers.csv \
-# -s Mus_musculus 
-
-# nohup python3 /home/ewalsh/PrimerDesign/ExonScan.py \
-# -gtf /ds-workspace/EW-TempDataStore/ORF/Homo_sapiens/Homo_sapiens.GRCh38.113.gtf.gz \
-# -fa /ds-workspace/EW-TempDataStore/ORF/Homo_sapiens/Homo_sapiens.GRCh38.dna.primary_assembly.fa \
-# -o /ds-workspace/EW-TempDataStore/ORF/Homo_sapiens/ORF_primers.csv \
-# -s Homo_sapiens  &
-
-
-
 
 
