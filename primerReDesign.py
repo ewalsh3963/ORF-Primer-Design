@@ -34,7 +34,12 @@ class CommandLine:
 def symbol_to_ensembl(species, database, var):
     data = EnsemblRelease(release = 108, species = species)
     ## check if the EnsemblRelease data has been downloaded 
-    dbList = subprocess.run(["pyensembl", "list"], shell = False)
+    dbList = subprocess.run(
+    ["pyensembl", "list"],
+    capture_output=True,
+    text=True,
+    check=True
+)
     if re.search('108', dbList) and re.search(species, dbList):
         x=10
     else: 

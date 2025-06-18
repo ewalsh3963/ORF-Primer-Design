@@ -147,3 +147,8 @@ workflow {
     .collectFile(name: "${params.outDir}/ORF_primers.csv")
 
 }
+
+
+// nextflow run main.nf  -process.echo --species Mus_musculus \
+// --outDir /home/ewalsh/scratch \
+// --features /home/ewalsh/PrimerDesign/GeneSymbols.csv

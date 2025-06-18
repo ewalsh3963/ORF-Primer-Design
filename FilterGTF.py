@@ -7,6 +7,8 @@ import pdb
 import argparse
 import concurrent.futures
 import csv
+import pdb
+import subprocess
 import re
 from pybiomart import Server
 from pyensembl import EnsemblRelease
@@ -34,15 +36,19 @@ class CommandLine:
 def symbol_to_ensembl(species, database, var):
     data = EnsemblRelease(release = 108, species = species)
     ## check if the EnsemblRelease data has been downloaded 
-    dbList = subprocess.run(["pyensembl", "list"], shell = False)
-    if re.search('108', dbList) and re.search(species, dbList):
-        x=10
-    else: 
+    dbList = subprocess.run(
+        ["pyensembl", "list"],
+        capture_output=True,
+        text=True,
+        check=True
+    ).stdout
+    if species.lower() not in dbList.lower():
         # print("Ensembl database NOT found...downloading and indexing now")
         data.download()
         data.index()
     ## initialize ensembl ID column
     database['ensembl_id'] = None
+    
     for i in np.arange(database.shape[0]):
         gene_symbol = database[var][i]
         if isinstance(gene_symbol, str):
@@ -122,28 +128,34 @@ def main(command=None):
     dataset = mart['hsapiens_gene_ensembl'] 
 
     if species != "Homo_sapiens":
-        queryList = features['ensembl_id'].tolist()
-        queryList = [i for i in queryList if i is not None] ## remove values that are None
+        # Filter out None values
+        query_list = features['ensembl_id'].dropna().tolist()
 
-        ## split the query list into chunks of size querySize
-        querySize = 100; queryDF = pd.DataFrame()
-        queryList = [queryList[i:i + querySize] for i in range(0, len(queryList), querySize)]
-        queryFinal = []
-        for i in range(0, len(queryList), querySize):
-            queryFinal.append(queryList[i:i+querySize])
-        queryFinal = queryFinal[0]
-        
-        for item in queryFinal:
-            ## run biomart query 
-            ortho_species_biomart = (species[0] + re.sub('.*_','',species)).lower()
-            att1 = ortho_species_biomart + '_homolog_ensembl_gene'   
-            tmp = dataset.query(attributes=['ensembl_gene_id', att1], filters={'link_ensembl_gene_id': item})
-            try: 
-                queryDF = pd.concat([queryDF, tmp])
+        # Split query list into chunks
+        query_size = 100
+        query_chunks = [query_list[i:i + query_size] for i in range(0, len(query_list), query_size)]
+
+        # Initialize result DataFrame
+        query_df = pd.DataFrame()
+
+        # Construct ortholog attribute prefix
+        ortho_species = (species[0] + re.sub('.*_', '', species)).lower()
+        attribute_name = f"{ortho_species}_homolog_ensembl_gene"
+
+        # Run queries chunk-by-chunk
+        for chunk in query_chunks:
+            try:
+                result = dataset.query(
+                    attributes=['ensembl_gene_id', attribute_name],
+                    filters={'link_ensembl_gene_id': chunk}
+                )
+                query_df = pd.concat([query_df, result], ignore_index=True)
             except ValueError:
-                pass
-        
-        queryDF.columns = ['ensembl_id','ortho_symbol']
+                continue  # Skip chunk if query fails
+
+        # Rename columns
+        pdb.set_trace()
+        query_df.columns = ['ensembl_id', 'ortholog_id']
         ## merge with symbols 
         features = pd.merge(features, queryDF, how = 'left')
         
@@ -203,14 +215,7 @@ if __name__ == "__main__":
 
 
 # python3 /home/ewalsh/PrimerDesign/FilterGTF.py \
-# -gtf /ds-workspace/EW-TempDataStore/ORF/Mus_musculus/Mus_musculus.GRCm39.113.gtf.gz \
-# -f /ds-workspace/EW-TempDataStore/Retrogenix_data/protein_screens/CrossSpeciesORF.csv \
+# -gtf /home/ewalsh/PrimerDesign/work/7b/8bb354f469261f25f33bbab82ac6af/Mus_musculus.GRCm39.114.gtf.gz \
+# -f /home/ewalsh/PrimerDesign/GeneSymbols.csv \
 # -s Mus_musculus
-
-
-# python3 /home/ewalsh/PrimerDesign/FilterGTF.py \
-# -gtf /ds-workspace/EW-TempDataStore/ORF/Homo_sapiens/Homo_sapiens.GRCh38.113.gtf.gz \
-# -f /ds-workspace/EW-TempDataStore/Retrogenix_data/protein_screens/CrossSpeciesORF.csv \
-# -s Homo_sapiens
-
 
