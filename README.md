@@ -7,14 +7,14 @@ This repository contains tools and pipelines for automated primer design targeti
 The project streamlines the process of:
 
 - Parsing CDS and genome files
-- Designing primers flanking ORFs with custom parameters (e.g., length, Tm)
+- Designing primers flanking ORFs
 - Exporting primer sequences for synthesis or downstream molecular biology workflows
 
 ## ⚙️ Features
 
 - Accepts FASTA/GenBank-formatted genome and CDS files
 - Automatically identifies ORF regions and generates compatible primer pairs
-- Supports customization of primer parameters (e.g., GC content, length, Tm)
+- Accepts Homo sapiens gene symbols and can convert them to other species to support multi-species expression assays
 - Batch processing of multiple genes
 - Outputs primer sequences and metadata in CSV or tab-delimited formats
 
